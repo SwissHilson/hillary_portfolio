@@ -18,17 +18,17 @@ import { SITE_COORDINATES, ANIMATION_EASE } from "@/lib/constants";
  * - Staggered entrance animations — each element draws in sequence
  *   like a CAD instrument completing a technical drawing
  *
- * Animation philosophy:
- * Every animation has an engineering analog:
- * - Coordinate label: survey instrument locking onto target
- * - Headline lines: drafting pen drawing text annotations
- * - Dimension line: CAD dimension indicator extending from left
- * - CTAs: structural nodes becoming active
- * - Photo frame: blueprint border being traced
+ * Mobile layout note:
+ * - Photo now visible on mobile (previously hidden lg:block).
+ * - Uses CSS grid `order` to place photo above headline on mobile
+ *   as a compact identity anchor, while preserving the original
+ *   content-left/photo-right order on desktop (lg+).
+ * - Full CAD frame (dashed border, corner markers, annotations)
+ *   is preserved at every breakpoint, just scaled to a smaller
+ *   container width on mobile.
  *
  * Photo slot:
  * - Set PHOTO_READY = true when /public/images/hillary-professional.jpg exists
- * - Layout is identical — no shift, no redesign required
  */
 
 const PHOTO_READY = true;
@@ -126,12 +126,12 @@ export default function Hero() {
           "items-center py-20 lg:py-0"
         )}>
 
-          {/* Left — Identity */}
+          {/* Left — Identity (order-2 on mobile so photo shows first) */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="flex flex-col gap-8"
+            className="flex flex-col gap-8 order-2 lg:order-1"
           >
             {/* Location */}
             <motion.div variants={fadeInVariants} className="flex items-center gap-2">
@@ -233,18 +233,18 @@ export default function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* Right — Photo slot */}
+          {/* Right — Photo slot (order-1 on mobile: shows above headline) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: ANIMATION_EASE.engineering, delay: 0.3 }}
-            className="hidden lg:block"
+            className="order-1 lg:order-2 w-48 sm:w-56 mx-auto lg:w-full lg:mx-0"
           >
             <div className="relative">
               {/* Outer dashed annotation frame */}
               <div
                 aria-hidden="true"
-                className="absolute -top-3 -left-3 -right-3 -bottom-3 border border-dashed border-[var(--color-border)] pointer-events-none"
+                className="absolute -top-2 -left-2 -right-2 -bottom-2 lg:-top-3 lg:-left-3 lg:-right-3 lg:-bottom-3 border border-dashed border-[var(--color-border)] pointer-events-none"
               />
 
               {/* CAD corner markers */}
@@ -252,7 +252,7 @@ export default function Hero() {
                 <div
                   key={i}
                   aria-hidden="true"
-                  className={cn("absolute w-3 h-3 border-[var(--color-accent)]", pos.outer, pos.border)}
+                  className={cn("absolute w-2 h-2 lg:w-3 lg:h-3 border-[var(--color-accent)]", pos.outer, pos.border)}
                 />
               ))}
 
@@ -265,7 +265,7 @@ export default function Hero() {
                     fill
                     priority
                     className="object-cover object-top"
-                    sizes="400px"
+                    sizes="(max-width: 1024px) 224px, 400px"
                   />
                 ) : (
                   <div
@@ -288,7 +288,7 @@ export default function Hero() {
               </div>
 
               {/* Bottom annotation */}
-              <div aria-hidden="true" className="mt-3 flex items-center justify-between">
+              <div aria-hidden="true" className="mt-2 lg:mt-3 flex items-center justify-between">
                 <span className="technical-label">Chukwuemeka C. Hillary</span>
                 <span className="technical-label">UNN — 2025</span>
               </div>
