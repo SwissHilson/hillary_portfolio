@@ -1,26 +1,306 @@
+/**
+ * Hillary Portfolio — Global Styles
+ * Tailwind v4 syntax
+ *
+ * Architecture:
+ * - @import "tailwindcss" replaces the three @tailwind directives from v3
+ * - @theme block defines all design tokens — replaces tailwind.config.ts theme
+ * - CSS custom properties handle dark/light mode switching via next-themes
+ * - Dark mode default; .light class inverts to drafting-paper aesthetic
+ */
+
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ─── Tailwind v4 Theme Tokens ───────────────────────────────────────────── */
+/* Everything in @theme becomes a Tailwind utility class automatically.
+   e.g. --color-accent → bg-accent, text-accent, border-accent           */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@theme {
+  /* ── Fonts ── */
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* ── Type Scale ── */
+  --font-size-2xs: 0.625rem;
+  --line-height-2xs: 1rem;
+  --font-size-xs: 0.75rem;
+  --line-height-xs: 1.125rem;
+  --font-size-sm: 0.875rem;
+  --line-height-sm: 1.375rem;
+  --font-size-base: 1rem;
+  --line-height-base: 1.625rem;
+  --font-size-lg: 1.125rem;
+  --line-height-lg: 1.75rem;
+  --font-size-xl: 1.25rem;
+  --line-height-xl: 1.875rem;
+  --font-size-2xl: 1.5rem;
+  --line-height-2xl: 2rem;
+  --font-size-3xl: 1.875rem;
+  --line-height-3xl: 2.375rem;
+  --font-size-4xl: 2.25rem;
+  --line-height-4xl: 2.75rem;
+  --font-size-5xl: 3rem;
+  --line-height-5xl: 3.5rem;
+  --font-size-6xl: 3.75rem;
+  --line-height-6xl: 4.25rem;
+  --font-size-7xl: 4.5rem;
+  --line-height-7xl: 5rem;
+
+  /* ── Spacing ── */
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+  --spacing-26: 6.5rem;
+  --spacing-30: 7.5rem;
+  --spacing-section: 6rem;
+  --spacing-section-lg: 9rem;
+
+  /* ── Border Radius ── */
+  --radius-none: 0;
+  --radius-sm: 0.125rem;
+  --radius: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+
+  /* ── Colors — Dark Mode Defaults ──
+     These are the base token values. The .light class overrides them below.
+     Tailwind reads --color-* variables and generates utility classes.     */
+
+  --color-background: hsl(0 0% 4%);
+  --color-foreground: hsl(0 0% 93%);
+
+  --color-surface: hsl(0 0% 7%);
+  --color-surface-elevated: hsl(0 0% 10%);
+
+  --color-border: hsl(0 0% 12%);
+  --color-border-subtle: hsl(0 0% 8%);
+
+  /* Engineering Yellow — the signature accent */
+  --color-accent: hsl(46 80% 60%);
+  --color-accent-foreground: hsl(0 0% 4%);
+  --color-accent-muted: hsl(46 80% 60% / 0.1);
+
+  /* Technical Blue — digital / software systems */
+  --color-accent-blue: hsl(217 91% 60%);
+  --color-accent-blue-muted: hsl(217 91% 60% / 0.1);
+
+  --color-muted: hsl(0 0% 63%);
+  --color-muted-foreground: hsl(0 0% 32%);
+
+  /* Engineering-specific */
+  --color-engineering-grid: hsl(0 0% 100% / 0.03);
+  --color-dimension-line: hsl(46 80% 60% / 0.4);
+
+  /* ── Animations ── */
+  --animate-extend-x: extend-x 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-fade-in: fade-in 0.4s ease forwards;
+  --animate-reveal-up: reveal-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-tick-in: tick-in 0.3s ease forwards;
+  --animate-load-pulse: load-pulse 2s ease-in-out infinite;
+
+  @keyframes extend-x {
+    from { transform: scaleX(0); transform-origin: left; }
+    to   { transform: scaleX(1); transform-origin: left; }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes reveal-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes tick-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes load-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.4; }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ─── Light Mode Token Overrides ─────────────────────────────────────────── */
+/* next-themes adds class="light" to <html> when light mode is active.
+   We override only the color tokens — everything else stays the same.    */
+
+.light {
+  --color-background: hsl(0 0% 97%);
+  --color-foreground: hsl(0 0% 9%);
+
+  --color-surface: hsl(0 0% 100%);
+  --color-surface-elevated: hsl(0 0% 95%);
+
+  --color-border: hsl(0 0% 88%);
+  --color-border-subtle: hsl(0 0% 93%);
+
+  --color-accent: hsl(40 85% 45%);
+  --color-accent-foreground: hsl(0 0% 100%);
+  --color-accent-muted: hsl(40 85% 45% / 0.08);
+
+  --color-accent-blue: hsl(217 91% 50%);
+  --color-accent-blue-muted: hsl(217 91% 50% / 0.08);
+
+  --color-muted: hsl(0 0% 40%);
+  --color-muted-foreground: hsl(0 0% 60%);
+
+  --color-engineering-grid: hsl(0 0% 0% / 0.04);
+  --color-dimension-line: hsl(40 85% 45% / 0.5);
+}
+
+/* ─── Base Layer ─────────────────────────────────────────────────────────── */
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scrollbar-gutter: stable;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.625;
+    overflow-x: hidden;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  ::selection {
+    background-color: hsl(46 80% 60% / 0.2);
+    color: var(--color-foreground);
+  }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--color-background); }
+  ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-muted-foreground); }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--color-foreground);
+  }
+
+  p {
+    color: var(--color-muted);
+    max-width: 68ch;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  img, video { display: block; max-width: 100%; }
+  button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+  code, kbd, pre {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+  }
+}
+
+/* ─── Utility Classes ────────────────────────────────────────────────────── */
+
+@layer utilities {
+  /* Blueprint grid background — hero and section texture */
+  .engineering-grid {
+    background-image:
+      linear-gradient(var(--color-engineering-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-engineering-grid) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .engineering-grid-sm {
+    background-image:
+      linear-gradient(var(--color-engineering-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-engineering-grid) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Monospace technical label — coordinates, annotations */
+  .technical-label {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-muted-foreground);
+  }
+
+  /* Site-wide max-width container */
+  .site-container {
+    width: 100%;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .site-container {
+      padding-left: 2.5rem;
+      padding-right: 2.5rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .site-container {
+      padding-left: 3rem;
+      padding-right: 3rem;
+    }
+  }
+
+  /* Accent underline that extends like a CAD dimension line on hover */
+  .accent-line {
+    position: relative;
+    display: inline-block;
+  }
+
+  .accent-line::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .accent-line:hover::after,
+  .accent-line.active::after {
+    transform: scaleX(1);
+  }
 }
